@@ -1,0 +1,1757 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FRIA Field Guide</title>
+<meta name="theme-color" content="#3F5E3A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="FRIA Guide">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="icon" href="img/icon-192.png">
+<style>/* Layout: one column field tool, sticky search header, bottom tab bar sized for gloved thumbs */
+:root{
+  --bg:#F7F5EF; --surface:#FFFFFF; --ink:#1E2A1C; --muted:#5B6355; --line:#D9D3C3;
+  --green:#3F5E3A; --green-ink:#FFFFFF; --tan:#CFA36B; --tan-soft:#F3E7D3; --bronze:#8A6230;
+  --hit:#FFE9A8; --red:#A3261F; --red-soft:#F7E1DE; --amber:#8A5A00; --amber-soft:#F8ECCF;
+  --ok:#2F6B2A; --ok-soft:#E1EEDB; --blue:#245E9E; --blue-soft:#E1EBF6;
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141912; --surface:#1D241B; --ink:#E9ECE3; --muted:#A6AE9E; --line:#38422F;
+  --green:#5E8A56; --green-ink:#FFFFFF; --tan:#CFA36B; --tan-soft:#3A3122; --bronze:#D9B07A;
+  --hit:#5C4B12; --red:#F08A80; --red-soft:#3D1F1C; --amber:#F2C46B; --amber-soft:#3A2F14;
+  --ok:#9CD38F; --ok-soft:#203A1C; --blue:#8DB8EA; --blue-soft:#1C2C40; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141912; --surface:#1D241B; --ink:#E9ECE3; --muted:#A6AE9E; --line:#38422F;
+  --green:#5E8A56; --green-ink:#FFFFFF; --tan:#CFA36B; --tan-soft:#3A3122; --bronze:#D9B07A;
+  --hit:#5C4B12; --red:#F08A80; --red-soft:#3D1F1C; --amber:#F2C46B; --amber-soft:#3A2F14;
+  --ok:#9CD38F; --ok-soft:#203A1C; --blue:#8DB8EA; --blue-soft:#1C2C40; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:17px/1.5 var(--font);-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--green)}
+a{color:var(--blue)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--tan);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--green);color:var(--green-ink);box-shadow:0 1px 0 rgba(0,0,0,.15)}
+header.top .wrap{padding-block:10px 12px;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{width:30px;height:48px;object-fit:contain;border-radius:3px;background:#F4EFE2}
+.brand>div{min-width:0;flex:1}
+.brand b{font-size:17px;letter-spacing:.01em;display:block}
+.brand small{display:block;font-size:11px;opacity:.85;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status{flex-shrink:0;font-size:12px;padding:3px 8px;border-radius:99px;background:rgba(255,255,255,.16);white-space:nowrap}
+.search{display:flex;gap:8px}
+.search input{flex:1;min-width:0;font:inherit;font-size:18px;padding:12px 14px;border-radius:10px;border:0;background:var(--surface);color:var(--ink)}
+.search button{flex-shrink:0;border:0;border-radius:10px;padding:0 16px;background:var(--tan);color:#2A1E0C;font-weight:700}
+
+main{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+main .wrap{padding-block:16px 24px;display:grid;gap:16px}
+h1,h2,h3{text-wrap:balance;line-height:1.25;margin:0}
+h1{font-size:22px;color:var(--green)}
+h2{font-size:19px;color:var(--green)}
+h3{font-size:16px}
+p{margin:0}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--bronze);font-weight:700}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:8px 14px;font-size:15px;cursor:pointer}
+.chip:active{background:var(--tan-soft)}
+
+.result{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:8px;min-width:0}
+.result .where{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.result .where button{border:0;background:none;color:var(--blue);text-decoration:underline;padding:0;font-size:13px;cursor:pointer}
+.tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:5px}
+.tag.std{background:var(--tan-soft);color:var(--bronze)}
+.tag.def{background:var(--blue-soft);color:var(--blue)}
+mark{background:var(--hit);color:inherit;border-radius:3px;padding:0 1px}
+.result ul,.sec ul,.sec ol{margin:0;padding-left:22px;display:grid;gap:4px}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:16px}
+
+.std{border-left:4px solid var(--tan);background:var(--tan-soft);padding:10px 12px;border-radius:0 8px 8px 0}
+.std .lab{display:block;font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--bronze);margin-bottom:2px}
+.cite{font-size:13px;font-style:italic;color:var(--muted)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+.tbl table{border-collapse:collapse;width:100%;font-size:14px}
+.tbl.wide table{min-width:560px}
+.tbl th{background:var(--green);color:var(--green-ink);text-align:left;padding:7px 8px;font-weight:700;font-size:13px}
+.tbl td{padding:7px 8px;border-top:1px solid var(--line);vertical-align:top}
+.tbl tr:nth-child(even) td{background:var(--bg)}
+.fig{display:block;border:1px solid var(--line);border-radius:8px;background:#fff;padding:0;cursor:zoom-in;width:100%}
+.fig img{display:block;width:100%;height:auto;border-radius:8px}
+
+.sec{display:grid;gap:12px}
+.toc{display:grid;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px}
+.toc button{display:flex;justify-content:space-between;gap:10px;text-align:left;border:0;background:none;padding:11px 10px;border-radius:8px;cursor:pointer;font-size:16px}
+.toc button.sub{padding-left:28px;font-size:15px;color:var(--muted)}
+.toc button:active{background:var(--tan-soft)}
+.back{justify-self:start;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:8px 12px;cursor:pointer}
+.gloss{display:grid;gap:8px}
+.gloss div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+
+.cards{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;cursor:pointer;display:grid;gap:4px}
+.card b{color:var(--green);font-size:17px}
+.card span{font-size:14px;color:var(--muted)}
+
+.wk{display:grid;gap:14px}
+.trail{display:flex;flex-wrap:wrap;gap:6px;font-size:13px}
+.trail span{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 8px;color:var(--muted)}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
+.q h2{color:var(--ink)}
+.q ul{margin:0;padding-left:22px;display:grid;gap:6px}
+.opts{display:grid;gap:10px}
+.opt{border:2px solid var(--green);background:var(--surface);color:var(--green);border-radius:10px;padding:14px;font-weight:700;font-size:17px;cursor:pointer;text-align:left}
+.opt:active{background:var(--green);color:var(--green-ink)}
+.answer{border-radius:12px;padding:16px;display:grid;gap:10px;border:2px solid}
+.answer .code{font-size:26px;font-weight:800;letter-spacing:.01em}
+.answer.red{background:var(--red-soft);border-color:var(--red)} .answer.red .code{color:var(--red)}
+.answer.amber{background:var(--amber-soft);border-color:var(--amber)} .answer.amber .code{color:var(--amber)}
+.answer.ok{background:var(--ok-soft);border-color:var(--ok)} .answer.ok .code{color:var(--ok)}
+.answer.blue{background:var(--blue-soft);border-color:var(--blue)} .answer.blue .code{color:var(--blue)}
+.answer ul{margin:0;padding-left:22px;display:grid;gap:4px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+nav.tabs button{border:0;background:none;padding:10px 4px 12px;font-size:13px;font-weight:600;color:var(--muted);display:grid;justify-items:center;gap:3px;cursor:pointer}
+nav.tabs button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs button[aria-current="page"]{color:var(--green)}
+
+.zoom{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.88);overflow:auto;padding:calc(56px + env(safe-area-inset-top,0px)) max(8px,env(safe-area-inset-right,0px)) 24px max(8px,env(safe-area-inset-left,0px))}
+.zoom img{display:block;width:100%;max-width:none;background:#fff;border-radius:6px}
+.zoom.big img{width:200%}
+.zoom .bar{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));right:calc(8px + env(safe-area-inset-right,0px));display:flex;gap:8px}
+.zoom .bar button{border:0;border-radius:8px;padding:10px 14px;background:#fff;color:#111;font-weight:700}
+footer.note{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important}}
+</style></head><body>
+<header class="top"><div class="wrap">
+  <div class="brand"><img src="img/logo.jpg" alt=""><div><small>Tarn Forestry · Field guide 2 of 3</small><b>FRIA Field Guide</b></div><span class="status" id="status">Online</span></div>
+  <form class="search" id="search" role="search"><input id="q" type="search" placeholder="Ask: blocked ditch, can't reach pipe…" autocomplete="off" enterkeyhint="search" aria-label="Search the guide"><button type="submit">Ask</button></form>
+</div></header>
+<main><div class="wrap" id="view"></div></main>
+<nav class="tabs" aria-label="Sections"><div class="wrap"><button data-tab="ask" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Ask</button><button data-tab="walk" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h10M4 12h7M4 18h10"/><path d="M17 9l3 3-3 3"/></svg>Walkthroughs</button><button data-tab="card" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M9 10v9"/></svg>Field card</button><button data-tab="guide" aria-current="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2z"/><path d="M8 7h6M8 11h6"/></svg>Guide</button></div></nav>
+<script id="guide-data" type="application/json">[
+{
+"t": "h1",
+"x": "1. What the FRIA Is and Why We\u2019re Doing It"
+},
+{
+"t": "p",
+"x": "This guide covers the road and water-crossing inventory we run for Manulife across all of its ownership. It is one of three Tarn Forestry field guides: Harvest Unit Layout, this guide, and Stream Permanence Surveys. Order of precedence when they conflict: Oregon Forest Practices rules, then Client protocol, then this guide."
+},
+{
+"t": "p",
+"x": "Definitions here are drawn from the Oregon Forest Practices Act administrative rules (OAR), the ODF Forest Practices Technical Guidance for Forest Road Inventory and Assessment (June 2024), and the 2022 Private Forest Accord Report. Rule citations follow each definition. Where the app\u2019s wording differs from the rule, the rule governs. Where Manulife has set a standard for how a call is made or recorded, it is marked **MANULIFE STANDARD**."
+},
+{
+"t": "p",
+"x": "The **Forest Road Inventory and Assessment (FRIA)** is the road inventory, project planning, and reporting process required of forestland owners who do not qualify for the small forestland owner minimum option. Its purpose is to reduce chronic and catastrophic sediment entry to waters of the state and to ensure fish passage, by identifying existing roads that do not meet the forest practices rules and bringing them into compliance."
+},
+{
+"t": "p",
+"x": "The requirement comes from Senate Bill 1501 (2022), which directed the Board of Forestry to adopt rules applying the 2022 Private Forest Accord. Road assessment requirements took effect **January 1, 2024**. Non-SFO landowners work through a 20-year process; all segments and crossings that do not meet the FPA must be improved or vacated by **January 1, 2044**."
+},
+{
+"t": "cite",
+"x": "OAR 629-600-0100; OAR 629-625-0900(9); ODF FRIA Technical Guidance, June 2024"
+},
+{
+"t": "p",
+"x": "**What this means for us in the field:** we are producing the record the landowner reports to ODF. Every classification we assign has a compliance consequence, so consistency between surveyors matters as much as accuracy."
+},
+{
+"t": "std",
+"x": "All mapped stream crossings are inventoried. Where the road is undrivable or abandoned, inventory only the crossings on fish streams and on medium and large non-fish streams. If reaching one of those crossings on an undrivable road takes extensive effort, more than an hour or two, check with the Manulife engineer before inventorying it."
+},
+{
+"t": "std",
+"x": "Where several dropdown options are true for one field, choose the worst one and put the others in the comments. If a pipe is plugged **and** needs a cross drain above it to be hydrologically disconnected, choose Inlet Cleanout in Maintenance_Need and note the cross drain in the comments. If none of the options fit, an odd diameter for example, code it Other, or NA or Unknown where Other is not offered, and put the particulars in the comments."
+},
+{
+"t": "h1",
+"x": "2. Culvert Status: The Four Codes"
+},
+{
+"t": "p",
+"x": "These are the codes the app asks for, and the most common source of inconsistent calls. They are not abbreviations of condition. They describe regulatory status, and two of them depend on the type of stream being crossed."
+},
+{
+"t": "table",
+"rows": [
+[
+"Code",
+"Official term",
+"Means"
+],
+[
+"FFC-F",
+"Fully functioning culvert in Type F or Type SSBT streams",
+"A culvert in a fish-bearing or SSBT stream that, at time of inspection, meets the Forest Practice Rules as of 1 Jan 2022 and the technical guidance for culverts existing prior to 1 Jan 2024."
+],
+[
+"FFC-N",
+"Fully functioning culvert in Type N or Type D streams",
+"A culvert in a non-fish or domestic-use stream that, at time of inspection, meets all requirements of the Forest Practice Rules as of 1 Jan 2022."
+],
+[
+"CMRPR",
+"Culvert with minimal risks to public resources",
+"Minimizes sediment delivery; has not diverted and has no potential to divert streams or ditchline runoff; and on Type F/SSBT streams passes all adult and juvenile fish plus expected bed load and large wood."
+],
+[
+"CIRF",
+"Culvert with imminent risk of failure",
+"Any one of: actively diverting stream or ditchline runoff; actively eroding road prism or channel so as to undermine the culvert; completely blocked, plugged, crushed or buried; partially or completely failed fill; or high plugging potential with high fill at risk and high diversion potential."
+]
+]
+},
+{
+"t": "cite",
+"x": "All four defined at OAR 629-600-0100"
+},
+{
+"t": "p",
+"x": "**Rule of thumb:** work from the bottom up. Check the CIRF conditions first: if **any one** is true, it is imminent risk and nothing else matters. If none are true, check whether it meets minimal risk."
+},
+{
+"t": "std",
+"x": "Looking at the three-column test, there is really no regulatory difference between fully functioning and minimal risk. For Manulife's purposes, a minimal-risk culvert is one that does not meet the threshold of a CIRF but is partially plugged or has minor or historic erosion at the outlet. Whether a pipe is fully functioning depends on whether it passes the 50-year flow, and that is an office calculation. Field crews do not make an FFC call."
+},
+{
+"t": "std",
+"x": "**Culvert status in the field.** Choose one of four:"
+},
+{
+"t": "li",
+"x": "**CIRF:** any one of the imminent risk conditions above is true, not counting the 50-year flow. A CIRF pipe must be replaced within 2 years.",
+"num": false
+},
+{
+"t": "li",
+"x": "**CMRPR:** minor issues, but none of the imminent risk conditions.",
+"num": false
+},
+{
+"t": "li",
+"x": "**Undetermined:** a fish stream pipe that is not fish passable but is not imminent risk. Undetermined pipes must be prioritized for improvement; the FRIA guidance sets no deadline.",
+"num": false
+},
+{
+"t": "li",
+"x": "**Unknown:** the pipe looks good, and the only open question is the 50-year flow. This is the app default.",
+"num": false
+},
+{
+"t": "p",
+"x": "The office runs the 50-year calculation and changes Unknown to fully functioning (FFC-F or FFC-N) or to Undetermined. Failing the 50-year flow does not by itself make a pipe imminent risk: a pipe whose only problem is the 50-year flow is Undetermined, prioritized, and can be fixed any time before 2044."
+},
+{
+"t": "h2",
+"x": "2.1 The three-column test"
+},
+{
+"t": "p",
+"x": "ODF publishes the criteria as a side-by-side comparison. Every statement in a column must be true for that classification."
+},
+{
+"t": "table",
+"rows": [
+[
+"Fully Functioning",
+"Minimal Risk",
+"Imminent Risk"
+],
+[
+"No active stream diversions and no evidence of potential to divert.",
+"Has not diverted streams or ditchline runoff and does not have the potential to divert.",
+"High diversion potential, or actively diverting streams out of the channel or ditchline runoff directly to a stream."
+],
+[
+"No signs of erosion along the road prism or stream bank and channel. Adequate erosion control in place.",
+"Minimizes sediment delivery.",
+"Erosion present in road prism or stream channel showing increased risk to the structure."
+],
+[
+"Provides fish passage for all adult and juvenile fish on Type F and Type SSBT streams.",
+"Provides fish passage for all adult and juvenile fish on Type F and Type SSBT streams.",
+"High plugging potential."
+],
+[
+"Meets 50-year peak flow criteria.",
+"Meets 50-year peak flow criteria.",
+"Does not meet 50-year peak flow criteria."
+],
+[
+"Is open and flow is not impeded.",
+"Flow is not impeded, or a quick debris clean allows open flow. Note: if the culvert needs frequent cleaning to function, it is imminent risk.",
+"Completely blocked, plugged, crushed or buried; has partially or completely failed fill."
+]
+]
+},
+{
+"t": "cite",
+"x": "ODF FRIA Technical Guidance, June 2024, Table 5. All newly constructed water crossings must meet 100-year peak flow."
+},
+{
+"t": "p",
+"x": "**Pre-existing culvert:** a culvert is pre-existing if all five statements under Fully Functioning are true, or all five under Minimal Risk are true. If any Minimal Risk statement is false, it has more than minimal risk and is not pre-existing. If any Imminent Risk statement is true, it is not pre-existing. Pre_Existing_Culvert (yes, no or NA) is filled in at the office, not in the field."
+},
+{
+"t": "h1",
+"x": "3. Stream Classifications"
+},
+{
+"t": "table",
+"rows": [
+[
+"Type",
+"Meaning"
+],
+[
+"Type F",
+"Fish-bearing stream."
+],
+[
+"Type SSBT",
+"Stream with salmon, steelhead or bull trout present. Carries the most protective requirements."
+],
+[
+"Type D",
+"Stream with domestic water use."
+],
+[
+"Type N",
+"Non-fish-bearing stream."
+]
+]
+},
+{
+"t": "cite",
+"x": "Stream classification reported per OAR 629-625-0900(6)(a)(D)(ii)"
+},
+{
+"t": "p",
+"x": "**Why it matters at a crossing:** stream type determines whether a fish passage assessment is required at all, and which fully functioning code applies: FFC-F for Type F and SSBT, FFC-N for Type N and D."
+},
+{
+"t": "std",
+"x": "**Stream class at the crossing.** Label it from the stream layer. A mapped fish stream is Type F. A mapped non-fish stream is Type N. A stream that is not mapped is Type N."
+},
+{
+"t": "h1",
+"x": "4. Crossing Assessment Terms"
+},
+{
+"t": "p",
+"x": "**Active channel width**: the stream width between the ordinary high-water lines, or at the channel bankfull elevation if the ordinary high-water lines are indeterminate. It corresponds to a peak flow occurring on average once every one to two years.  OAR 629-600-0100"
+},
+{
+"t": "p",
+"x": "**How to measure:** measure bank to bank where abrupt changes in vegetation or bank texture occur. Take an average of **three measurements** upstream, or wherever best approximates the natural channel, spaced one to two channel widths apart, beyond the point where the structure influences channel characteristics. Prioritize riffle reaches over pools and log or rock steps, and avoid measuring on curves. Once you are acquainted with the process this becomes a quick look and estimation."
+},
+{
+"t": "std",
+"x": "Braided streams, streams with stream-adjacent wetlands, tidal streams and beaver-influenced streams are hard to measure. If you are stumped it is fine to leave active channel width as **NA** and note in the comments that it needs further review."
+},
+{
+"t": "std",
+"x": "**Fish streams only.** Active channel width, degree of embedment and substrate in pipe are collected on Type F and SSBT crossings only. On non-fish crossings leave active channel width at its default NA and do not take time on the others. Record active channel width to the nearest foot."
+},
+{
+"t": "cite",
+"x": "ODF FRIA Technical Guidance; see also Forest Practices Technical Note 4: Stream Crossing Fish Passage"
+},
+{
+"t": "p",
+"x": "**Degree of embedment (buried depth)**: how deep the culvert is sunk into the streambed. For round culverts, embedment should be **30\u201350%** of culvert height; for pipe arch culverts, **15\u201330%** of culvert height. The requirement relates specifically to fish-bearing streams. Embedment is a recent requirement, so few of the older pipes were installed embedded, but sediment that has collected naturally through the pipe counts toward embedment just the same. See Appendix C."
+},
+{
+"t": "cite",
+"x": "OAR 629-625-0320(6)(c)"
+},
+{
+"t": "p",
+"x": "**Field note:** this is what the buried-depth fields are asking for. Record inlet and outlet separately: a culvert can be well embedded at one end and perched at the other."
+},
+{
+"t": "std",
+"x": "**Embedment measurement.** On every fish stream culvert, measure the distance from the top of the culvert down to the substrate inside it, at the inlet and at the outlet, and record both in the notes. The buried-depth fields give the percent band; the measurement gives the engineer the exact figure for the flow calculation."
+},
+{
+"t": "p",
+"x": "**Substrate in pipe**: whether there is continuous and plentiful substrate inside the culvert consistent with the natural streambed material. This is one of the four fish passage barrier questions. Recorded as **yes, partial or no**.  ODF FRIA Fish Passage Assessment Flowchart"
+},
+{
+"t": "std",
+"x": "**Yes** is continuous and plentiful the whole way through. **Partial** is substrate at one end but not all the way through. **No** is a bare barrel."
+},
+{
+"t": "p",
+"x": "**Outlet drop**: a vertical drop from the culvert outlet to the water surface or streambed below. Any outlet drop is a potential fish passage barrier. It is the first of the four barrier questions.  ODF FRIA Fish Passage Assessment Flowchart"
+},
+{
+"t": "p",
+"x": "**Diversion potential**: exists when the capacity of a water crossing may not accommodate high flows, causing the stream to back up behind the fill and flow down the road. Water crossings must be designed and constructed so streamflow is not likely to be diverted out of the channel if the crossing fails. Where a stream can flow over the road and back into the channel, diversion potential is low. Diversion potential is **high on roads with long climbing sections or numerous stream crossings**.  OAR 629-625-0320(1)(g)"
+},
+{
+"t": "std",
+"x": "We are not quantifying diversion potential. If a stream is actively diverting, record **yes** and use the Road Notes point layer to GPS where it is being diverted to and from."
+},
+{
+"t": "p",
+"x": "**Hydrologic connectivity**: the degree to which the road prism routes water to a crossing or relief culvert rather than dispersing it. Water crossings must minimize hydrologic connectivity for the adjacent roadway. The total length of road with potential to drain to waters of the state is the **distance connected**; road length using best management practices to minimize that is the **distance disconnect**. Disconnection points include cross drains, water bars, grade reversals and crests.  OAR 629-625-0320(1)(d)"
+},
+{
+"t": "p",
+"x": "**Hydrologic disconnection**: the removal of direct routes of drainage or overland flow of road runoff to waters of the state.  OAR 629-600-0100"
+},
+{
+"t": "std",
+"x": "A stream pipe is hydrologically **disconnected** if any one of the following is true:"
+},
+{
+"t": "li",
+"x": "On the uphill side(s) of the pipe, there is a cross drain, another stream culvert, or both sides of the road are ditched out within 300 ft.",
+"num": false
+},
+{
+"t": "li",
+"x": "On the uphill side(s) of the pipe, there is a natural drainage break, such as a crest, within 300 ft.",
+"num": false
+},
+{
+"t": "li",
+"x": "On the uphill side(s) of the pipe, there are sediment traps or settling ponds in the ditchline.",
+"num": false
+},
+{
+"t": "li",
+"x": "For deep fills, the slope distance between the ditch and the actual stream channel is greater than 30 ft. However, if there is visible scour from the ditchline to the stream, no matter the distance, the pipe is connected.",
+"num": false
+},
+{
+"t": "li",
+"x": "For dirt surface roads, on the uphill side(s) of the pipe, there is a functional waterbar within 50 ft. If a ditch is present, waterbars must be keyed into the ditch to be considered functional.",
+"num": false
+},
+{
+"t": "li",
+"x": "The road is undrivable and well vegetated with grass or brush.",
+"num": false
+},
+{
+"t": "p",
+"x": "If the pipe is in a sag and one side of the sag is disconnected but the other is not, the pipe is connected. See Appendix D for the twelve cases worked through."
+},
+{
+"t": "p",
+"x": "**Plug potential**: the likelihood that woody material, sediment or debris will block the culvert. Woody material is more likely to plug a culvert that has a wide basin at the inlet relative to the pipe diameter. Assess site inputs (downed logs, woody debris, sediment sources) and whether the structure can pass them.  ODF FRIA Technical Guidance; OAR 629-625-0320(1)(c)"
+},
+{
+"t": "std",
+"x": "**InletOutlet_Condition.** Lots of things could be considered potential inputs for plugging. For this inventory, use that option only where there is a significant wad of debris within roughly 20 ft upstream of the pipe. A log wedged into both streambanks does not count, a half-submerged boulder does not count, a debris jam 100 ft up the hill does not count. **Do not use the Potential Sediment Deposits option.**"
+},
+{
+"t": "p",
+"x": "See Appendix E for worked examples of the 20 ft test."
+},
+{
+"t": "p",
+"x": "**Cross drain (relief** **culvert)**: A constructed feature across a road or in a ditch line, as a means of ditch relief, often before entering a stream channel. **Cross drains are not located in stream channels** and are considered elements of the road prism. Examples include culverts and water bars.  ODF FRIA Technical Guidance"
+},
+{
+"t": "p",
+"x": "**Field note:** because a cross drain is not in a stream channel, stream-related fields (slope, stream class, fish passage, active channel width, substrate, backwater) do not apply."
+},
+{
+"t": "std",
+"x": "Do not rely on the stream layer to decide whether a pipe is a culvert or a cross drain. **Look for a channel.** If there is a mapped stream but no channel actually exists at the road, call it a cross drain and note in the comments that there is no stream channel. In the reverse case, where you find a stream that is not mapped, call it a round, squash or box culvert as appropriate; no comment is necessary. If a pipe is carrying a spring (groundwater running out of the bank with no stream channel), enter it as a cross drain and note in the comments that it is a spring. Standing water in the ditch does not count as a spring."
+},
+{
+"t": "std",
+"x": "**Cross drains are relief culverts.** In this inventory a cross drain is a relief culvert. Do not record water bars as cross drains."
+},
+{
+"t": "std",
+"x": "**Structure type Other.** Puncheons and removed culverts already in the layer are coded Other, with puncheon or removed in the comments."
+},
+{
+"t": "p",
+"x": "See Appendix B for the six cases side by side."
+},
+{
+"t": "h2",
+"x": "4.1 Recording rules at the crossing"
+},
+{
+"t": "p",
+"x": "**Which fields to complete.** Fish stream crossings get the full set. Non-fish crossings skip the fish passage measurements. Cross drains are not in a stream channel, so the stream fields, culvert status and hydrologic connectivity do not apply."
+},
+{
+"t": "table",
+"rows": [
+[
+"Field",
+"Fish stream (F, SSBT)",
+"Non-fish stream (N, D)",
+"Cross drain"
+],
+[
+"Slope",
+"Complete",
+"Complete",
+"Does not apply"
+],
+[
+"Stream class",
+"Complete",
+"Complete",
+"Does not apply"
+],
+[
+"Fish passage",
+"Complete",
+"Not collected",
+"Does not apply"
+],
+[
+"Active channel width",
+"Complete, nearest foot",
+"Leave default NA",
+"Does not apply"
+],
+[
+"Buried depth, inlet and outlet",
+"Complete, plus measured depth in notes",
+"Not collected",
+"Does not apply"
+],
+[
+"Substrate in pipe",
+"Complete",
+"Not collected",
+"Does not apply"
+],
+[
+"Backwater",
+"Complete",
+"Complete",
+"Does not apply"
+],
+[
+"Culvert status",
+"Complete (Section 2)",
+"Complete (Section 2)",
+"NA"
+],
+[
+"Hydrologic connectivity",
+"Complete",
+"Complete",
+"NA"
+],
+[
+"Material, condition, diameter, length, percent open, inlet/outlet condition, fill height, downspout, stream channel erosion, maintenance need, comments",
+"Complete",
+"Complete",
+"Complete"
+]
+]
+},
+{
+"t": "p",
+"x": "See Appendix B for how to tell the two apart on the ground."
+},
+{
+"t": "std",
+"x": "**Photos.** Photos are not necessary for every pipe. Use your discretion about whether one adds value. If a culvert inlet is 30% blocked, a photo tells us no more than the percent open field does, and there is no need to photograph a pipe in fully functioning condition. Photos help in atypical situations where visibility is good."
+},
+{
+"t": "std",
+"x": "**Diameter.** For squash pipes, where the span and rise match no dropdown option, choose the option whose **span** is closest and put the actual dimensions in the comments. If both ends are buried and you cannot measure the diameter, choose Other and note the situation."
+},
+{
+"t": "std",
+"x": "**Fill_height_ft.** Height is measured from the downstream road shoulder vertically to the pipe invert directly underneath the road shoulder. Unless the pipe is at zero percent slope you will not be able to determine that without running a profile, so it is acceptable to measure fill height from the downstream road shoulder to the outlet invert. For fills deeper than the top dropdown band, put the estimated height in the comments: deep fills set replacement priority."
+},
+{
+"t": "std",
+"x": "**Percent_open.** How much of the opening is **clear** of sediment or other blockages, recorded in five bands: 1\u201325%, 26\u201350%, 51\u201375%, 76\u201399% and 100%. A clear barrel is 100% open. Assess the inlet or the outlet, whichever is the most plugged, generally the inlet. If it is the outlet, note that in the comments."
+},
+{
+"t": "std",
+"x": "**Percent** **open is an area, not a depth.** A pipe three quarters full by depth is only about 20% open by area, because what is left is the narrow crescent at the top. A round culvert embedded to spec, 30\u201350% of height, reads 51\u201375% open. That is the design, not a defect, so note in Comments that the fill is natural bed material. There is no 0% band: a completely blocked, plugged, crushed or buried pipe is recorded 1\u201325% open with a Comment, and the status is CIRF."
+},
+{
+"t": "p",
+"x": "See Appendix C for the five bands, and what a properly embedded pipe reads."
+},
+{
+"t": "std",
+"x": "**Downspout.** Whether the pipe has a downspout: a pipe extension carrying outlet water down the fill to the channel. The field records whether one is **there**, not whether one is needed. If a pipe needs one, record no and put the need in Comments, or code Stream_Channel_Erosion as yes and let the engineer decide between armour rock and a downspout."
+},
+{
+"t": "p",
+"x": "See Appendix G for what a downspout looks like."
+},
+{
+"t": "h2",
+"x": "4.2 The four fish passage barrier questions"
+},
+{
+"t": "p",
+"x": "A fish passage assessment is required for water crossings on fish-bearing streams. The flowchart turns on four questions:"
+},
+{
+"t": "li",
+"x": "Is there an outlet drop?",
+"num": true
+},
+{
+"t": "li",
+"x": "Is the inlet width less than the active channel width?",
+"num": true
+},
+{
+"t": "li",
+"x": "Is the culvert in alignment with the active channel in a manner that does not cause changes in water velocities?",
+"num": true
+},
+{
+"t": "li",
+"x": "Is there continuous and plentiful substrate consistent with streambed material within the culvert?",
+"num": true
+},
+{
+"t": "p",
+"x": "Other measurements that support the assessment: channel and streambed conditions, channel gradient measured outside the influence of the structure, culvert slope and alignment, culvert length and diameter, and degree of embedment."
+},
+{
+"t": "p",
+"x": "**Where these are captured in the app:** most of these measurements already exist as fields, though they are spread across the form rather than grouped as an assessment."
+},
+{
+"t": "table",
+"rows": [
+[
+"Fish passage measurement",
+"App field"
+],
+[
+"Culvert slope",
+"Slope"
+],
+[
+"Culvert length",
+"Length"
+],
+[
+"Culvert diameter",
+"Diameter_in"
+],
+[
+"Degree of embedment",
+"Buried_Depth_Inlet / Buried_Depth_Outlet"
+],
+[
+"Active channel width",
+"Active_Channel_Width_ft"
+],
+[
+"Outlet drop",
+"Outlet_Drop"
+],
+[
+"Substrate",
+"Substrate_in_Pipe"
+],
+[
+"Overall determination",
+"Fish_Passage"
+],
+[
+"Culvert alignment with active channel",
+"No field"
+],
+[
+"Channel gradient outside structure influence",
+"No field"
+]
+]
+},
+{
+"t": "std",
+"x": "Barrier questions 1, 2 and 4 are answerable from fields in the app. Question 3, culvert alignment with the active channel, has no field, and channel gradient is not captured either. We are not collecting those: a pipe that is fish passable except for alignment or channel gradient is not something we encounter. If you are not 100% confident in a call that a pipe is passable or non-passable, code it **needs review** instead."
+},
+{
+"t": "cite",
+"x": "ODF FRIA Technical Guidance, Appendix B"
+},
+{
+"t": "h1",
+"x": "5. Condition and Material"
+},
+{
+"t": "p",
+"x": "ODF's material assessment scale has **four** levels. Inspect structural integrity, stability and fill condition; assess the rate of corrosion; look for damaged joints, cracks, perforations and other physical changes; and look for sediment deposits, inputs for plugging and evidence of erosion."
+},
+{
+"t": "table",
+"rows": [
+[
+"ODF scale",
+"Use when"
+],
+[
+"Good",
+"Sound; minor surface wear only."
+],
+[
+"Fair",
+"Noticeable deterioration but structurally sound and functioning."
+],
+[
+"Poor",
+"Significant deterioration (heavy corrosion, deformation, perforation), still passing water but with reduced service life."
+],
+[
+"Non-functional",
+"No longer performing its function."
+]
+]
+},
+{
+"t": "cite",
+"x": "ODF FRIA Technical Guidance, crossing checklist, Material Assessment."
+},
+{
+"t": "p",
+"x": "**Note:** the app offers Good / Fair / Poor / Non-Functional / Unknown, matching the ODF scale."
+},
+{
+"t": "std",
+"x": "A culvert with holes in the bottom is **non-functional**. A pipe where rust is causing section loss but the pipe is still intact is **poor**. A pipe with mild rust, or a damaged inlet or outlet that does not impede water flow or impedes it only slightly, is **fair**. A culvert that is completely buried, where you cannot inspect the pipe condition, is **unknown**."
+},
+{
+"t": "h1",
+"x": "6. Road Assessment"
+},
+{
+"t": "p",
+"x": "**Road prism**: the constructed road cross-section: running surface, cut slope, fill slope and ditch. Cross drains are elements of the road prism.  ODF FRIA Technical Guidance"
+},
+{
+"t": "p",
+"x": "**High conservation value site**: an area where there is known hydrologic connectivity, chronic sedimentation, fish passage barriers, stream diversion or diversion potential. These sites currently contribute significant risk to aquatic resources at a scale beyond the immediate site, and resolving them delivers ecological benefit beyond the site itself.  OAR 629-625-0900(5)(a)"
+},
+{
+"t": "p",
+"x": "**Conditions that indicate a road does not meet the FPA:**"
+},
+{
+"t": "li",
+"x": "Active stream diversions",
+"num": false
+},
+{
+"t": "li",
+"x": "Direct sediment delivery to waters of the state",
+"num": false
+},
+{
+"t": "li",
+"x": "Chronic and substantial road prism erosion, including cut and fillslopes",
+"num": false
+},
+{
+"t": "p",
+"x": "**When to assess:** the primary factor is where surface water flows, concentrates, or is redirected. It is good practice to assess roads during the wet season or after a storm event, so overland flow and road surface drainage can be observed. Dry-month assessments still detect sediment deposits."
+},
+{
+"t": "cite",
+"x": "ODF FRIA Technical Guidance"
+},
+{
+"t": "h2",
+"x": "6.1 Road classifications"
+},
+{
+"t": "p",
+"x": "Four mutually exclusive categories. The distinction carries regulatory weight: inventory and improvement obligations differ by class."
+},
+{
+"t": "p",
+"x": "**Active road**: a road currently being used or maintained for the purpose of removing commercial forest products.  OAR 629-600-0100"
+},
+{
+"t": "p",
+"x": "**Inactive road**: a road used for past forest management purposes exclusive of removing commercial forest products. Still in the management system, just not currently hauling or actively maintained.  OAR 629-600-0100"
+},
+{
+"t": "p",
+"x": "**Vacated road**: a road that has been made impassable and is no longer to be used for forest management purposes or commercial forest harvesting activities. Vacating must be done in compliance with OAR 629-625-0650: the road must actually be treated, not merely unused.  OAR 629-600-0100; OAR 629-625-0650"
+},
+{
+"t": "p",
+"x": "**Abandoned road**: a road constructed prior to 1972 that does not meet the criteria of active, inactive, or vacated. Does not include skid trails.  OAR 629-600-0100"
+},
+{
+"t": "p",
+"x": "**Forest road**: a running surface built or cleared on forestland for transportation of forest products and forest management activities. Includes all active, inactive, vacated and abandoned roads; excludes skid trails. Any road granting access to forestland is likely a forest road.  ODF FRIA Technical Guidance"
+},
+{
+"t": "p",
+"x": "**Field note:** the common error is calling an unused road \u201cvacated\u201d when it has simply not been driven. Vacated means treated and made impassable. If it has not been treated, it is inactive."
+},
+{
+"t": "std",
+"x": "The pre-1972 date in the abandoned-road definition is a records question, not a field test. Do not try to age a road on the ground. For non-vacated roads, call a drivable road **active** and an undrivable road **inactive**. A road that is coyoted in, or impassable because of a culvert blowout, is inactive. If merchantable trees are growing in the road prism, it is safe to call it **abandoned**. Do not spend field time agonizing over the distinction: when in doubt call it abandoned, and we will confirm or deny from aerial photos afterward."
+},
+{
+"t": "h2",
+"x": "6.2 Vacated is a documented event"
+},
+{
+"t": "p",
+"x": "A road is vacated only where **all four** of the following are true: all water crossing structures and fills were removed; natural channel connectivity and drainage were re-established; the road was effectively barricaded; and the vacating was notified to the State Forester in compliance with OAR 629-625-0650. A road that has not been vacated to that standard is an abandoned road."
+},
+{
+"t": "cite",
+"x": "ODF FRIA Technical Guidance, Table 1; OAR 629-625-0650"
+},
+{
+"t": "std",
+"x": "**Removed** **crossings are what make a road vacated. Do not run the test backwards.** An old road line crossing a stream on the map tells you nothing about whether the crossing is still there. Unless the office confirms a vacating notification on file, treat the road as inactive or abandoned and treat its crossings as unknown."
+},
+{
+"t": "std",
+"x": "Where you cannot reach a crossing, leave the culvert status as Unknown with a comment saying why: no access, buried, could not locate. The crossing stays on the work matrix. Undetermined is reserved for the cases in Section 2. Never record a crossing as removed unless you saw that it was. Trees growing in the prism mean the road is abandoned, not that its culverts were pulled."
+},
+{
+"t": "h2",
+"x": "6.3 FPA_Class: when a road does not meet FPR"
+},
+{
+"t": "std",
+"x": "If any of the following is true at **any point** on the road segment, the road does NOT meet FPR:"
+},
+{
+"t": "li",
+"x": "The ditch is blocked or otherwise non-functional, and there is evidence of road prism or fillslope erosion caused by it. A blocked ditch with no erosion does not by itself fail the road: record it under Ditch_Presence with a maintenance note. If the road has no ditch but is outsloped and is in otherwise good condition, it meets FPR despite the lack of ditch.",
+"num": false
+},
+{
+"t": "li",
+"x": "The road fill has slid out, slumped, or is cracking.",
+"num": false
+},
+{
+"t": "li",
+"x": "Water is running down or across the road, or there is evidence in the form of rills or ruts that it has been.",
+"num": false
+},
+{
+"t": "li",
+"x": "There is ponded water in the road, particularly near a stream, or potholes deeper than the rocked surfacing. Potholes alone do not mean a road fails to meet FPR, but extensive potholing, particularly near water, triggers a does-not-meet call.",
+"num": false
+},
+{
+"t": "li",
+"x": "There is significant erosion or rilling in the cutbank, ditch or fillslope.",
+"num": false
+},
+{
+"t": "li",
+"x": "Streams or springs are pirated down the ditchline or running across the road. Even short distances of pirating are not acceptable.",
+"num": false
+},
+{
+"t": "std",
+"x": "Issues with stream pipes on the road, including hydrologic connection issues, **have no bearing on whether the road meets FPR.** A road can meet FPR and have bad pipes on it; the pipes are tracked separately in FRIA. The one exception is above: a pirated stream or spring is a road issue."
+},
+{
+"t": "p",
+"x": "See Appendix F for each condition drawn out."
+},
+{
+"t": "h2",
+"x": "6.4 Recording rules for road segments"
+},
+{
+"t": "std",
+"x": "**Pre-filled attributes.** These were pulled from Manulife\u2019s existing roads layer. Generally leave them as defaulted unless they are clearly wrong: if surface_material says rocked and the road is actually dirt, update it. Several fields also arrive pre-filled by default, such as Surface_Stability as Stable and Erosion_Control as No. Check each against the road and change only what is wrong. The only road fields that must be completed are FPA_Class and Road_Type."
+},
+{
+"t": "std",
+"x": "**Code** **the whole segment.** There is no easy way to break up a road segment in Field Maps, so if a segment has any issue, even on 10% of its length, code the whole segment as having that issue. One pirated spring makes FPA_Class Does not meet FPR even if the road looks great otherwise; one spot of cracking shoulder makes FPA_Class Does not meet FPR and Cut_Fillslope_Condition unstable. **Use the Road Notes point layer to record exactly where the isolated problem is.**"
+},
+{
+"t": "std",
+"x": "**Road** **Notes for changes in road type.** If the front half of a segment is active but it becomes undrivable, code the segment active and drop a Road Note point where it becomes undrivable, with an explanation: culvert washed out, brushed in, and so on. Same where a segment is only rocked for part of its length, or only ditched on the front end."
+},
+{
+"t": "std",
+"x": "**Adding roads.** You will find roads that are not in the roads layer. Add each one as a new segment in the road inventory layer and complete it like any other segment. Choose the green completed-inventory symbol when you create it, so Inventory_Completed fills in as Yes."
+},
+{
+"t": "std",
+"x": "**Limited Inventory.** Roads and structures marked Limited Inventory are not Manulife's responsibility: neighboring ownerships, and BLM controlled roads around Roseburg. Do not inventory them. Record a Limited Inventory pipe only if it has a significant issue that threatens a road we use."
+},
+{
+"t": "std",
+"x": "**Duplicate points.** Some areas, Corvallis in particular, have duplicate culvert points on one crossing. Inventory one and delete the duplicate."
+},
+{
+"t": "std",
+"x": "**Surface_Stability.** If the road does not meet FPR because of rilling, ruts or ponding, check unstable. Otherwise check stable. Cracked fills, slumps, and ditch and cutslope issues are captured elsewhere."
+},
+{
+"t": "std",
+"x": "**Ditch_Presence.** A ditch that is blocked or filled in is still a yes, with a note that it needs maintenance. A no means there is no ditch whatsoever, usually because the road is outsloped. Intermittent means a ditch along only part of the segment: drop a Road Note where it starts or stops."
+},
+{
+"t": "std",
+"x": "**Cut_Fillslope_Stability.** Check unstable if there are slumps, cracks, cutslope failures and the like."
+},
+{
+"t": "std",
+"x": "**Leave as defaulted.** Erosion_Control and Erosion_Control_Utilized: western Oregon is not using these. Construction_Year: filled in at the office if known. Travel_Speed: leave blank. Property: filled in by GIS."
+},
+{
+"t": "h1",
+"x": "7. Reporting Elements"
+},
+{
+"t": "p",
+"x": "What the landowner must ultimately report, and therefore what our inventory has to support:"
+},
+{
+"t": "li",
+"x": "Location and length of all active, inactive, vacated and abandoned roads within each Road Management Block.",
+"num": false
+},
+{
+"t": "li",
+"x": "Location of all water crossing culverts, each classified as fully functioning, minimal risk to public resources, imminent risk of failure, or undetermined.",
+"num": false
+},
+{
+"t": "li",
+"x": "Date of installation, if known, and an assessment of culvert material.",
+"num": false
+},
+{
+"t": "li",
+"x": "Fish passage barriers and prioritization of barrier improvement projects.",
+"num": false
+},
+{
+"t": "cite",
+"x": "OAR 629-625-0900(6)(a)(D); ODF FRIA Technical Guidance"
+},
+{
+"t": "p",
+"x": "**Road Management Block (RMB)**: A geographically distinct ownership block for which a landowner conducts a Forest Road Inventory and Assessment. Each RMB carries three core documents (a FRIA Plan, a work matrix, and maps), all updated annually.  OAR 629-600-0100"
+},
+{
+"t": "h1",
+"x": "8. Sources"
+},
+{
+"t": "li",
+"x": "ODF Forest Practices Technical Guidance: Forest Road Inventory and Assessment (FRIA), effective 1 January 2024, June 2024 revision.",
+"num": false
+},
+{
+"t": "li",
+"x": "Oregon Administrative Rules: OAR 629-600-0100 (definitions); OAR 629-625-0320 (water crossings); OAR 629-625-0600 (maintenance); OAR 629-625-0650 (vacating); OAR 629-625-0900 (FRIA requirements and reporting).",
+"num": false
+},
+{
+"t": "li",
+"x": "Private Forest Accord Report, February 2022.",
+"num": false
+},
+{
+"t": "li",
+"x": "ODF Forest Practices Technical Note 4: Stream Crossing Fish Passage.",
+"num": false
+},
+{
+"t": "li",
+"x": "ODF Road Condition Assessments (RCA) guidance, for small forestland owners.",
+"num": false
+},
+{
+"t": "p",
+"x": "Rules and guidance are revised periodically. Confirm you are working from the current version before each field season."
+},
+{
+"t": "h1",
+"x": "9. Glossary"
+},
+{
+"t": "p",
+"x": "Terms as they are used in this guide and in the app. Rule citations are in the sections above."
+},
+{
+"t": "gloss",
+"rows": [
+[
+"Abandoned road",
+"Constructed before 1972 and not meeting active, inactive or vacated. A records question, not a field test."
+],
+[
+"Active channel width",
+"Stream width between the ordinary high-water lines, or at bankfull elevation where those are indeterminate."
+],
+[
+"Active road",
+"Currently used or maintained for removing commercial forest products."
+],
+[
+"Backwater",
+"Ponded water upstream of a crossing caused by the structure restricting flow."
+],
+[
+"CIRF",
+"Culvert with imminent risk of failure."
+],
+[
+"CMRPR",
+"Culvert with minimal risks to public resources."
+],
+[
+"Cross drain",
+"Relief culvert in a road or ditch line, not in a stream channel. An element of the road prism."
+],
+[
+"Degree of embedment",
+"How deep the culvert is sunk into the streambed, as a share of culvert height. A depth, not an area."
+],
+[
+"Distance connected",
+"Length of road with potential to drain to waters of the state."
+],
+[
+"Distance disconnect",
+"Length of road where best management practices break that drainage."
+],
+[
+"Diversion potential",
+"The chance that a failed crossing sends streamflow down the road instead of back to the channel."
+],
+[
+"Downspout",
+"A pipe extension on a culvert outlet carrying water down the fill to the channel."
+],
+[
+"ELZ",
+"Equipment limitation zone."
+],
+[
+"FFC-F",
+"Fully functioning culvert in Type F or Type SSBT streams."
+],
+[
+"FFC-N",
+"Fully functioning culvert in Type N or Type D streams."
+],
+[
+"FPA",
+"Oregon Forest Practices Act."
+],
+[
+"FPR",
+"Forest practices rules. A road either meets FPR or does not."
+],
+[
+"FRIA",
+"Forest Road Inventory and Assessment."
+],
+[
+"Fish passage barrier",
+"A crossing that blocks adult or juvenile fish passage on a Type F or SSBT stream."
+],
+[
+"High conservation value site",
+"A site with known connectivity, chronic sedimentation, fish passage barriers or stream diversion."
+],
+[
+"Hydrologic connectivity",
+"The degree to which the road prism routes water to a crossing rather than dispersing it."
+],
+[
+"Hydrologic disconnection",
+"Removal of direct routes of road runoff to waters of the state."
+],
+[
+"Inactive road",
+"Used for past forest management but not currently hauling or maintained. In practice, undrivable."
+],
+[
+"Invert",
+"The inside bottom of the pipe."
+],
+[
+"Np",
+"Perennial non-fish stream."
+],
+[
+"Ns",
+"Seasonal non-fish stream."
+],
+[
+"OAR",
+"Oregon Administrative Rules."
+],
+[
+"ODF",
+"Oregon Department of Forestry."
+],
+[
+"Outlet drop",
+"A vertical drop from the culvert outlet to the water surface or streambed below."
+],
+[
+"PFA",
+"Private Forest Accord, 2022."
+],
+[
+"Percent open",
+"How much of the opening is clear, in five bands. An area, not a depth. 100% is a clear barrel."
+],
+[
+"Pirating",
+"A stream or spring captured by the ditchline and carried away from its channel."
+],
+[
+"Plug potential",
+"The likelihood that woody material, sediment or debris will block the culvert."
+],
+[
+"Pre-existing culvert",
+"A culvert meeting all five statements under Fully Functioning, or all five under Minimal Risk."
+],
+[
+"RMB",
+"Road Management Block. The unit a FRIA plan, work matrix and maps are built for."
+],
+[
+"Road prism",
+"The constructed road cross-section: running surface, cut slope, fill slope and ditch."
+],
+[
+"SFO",
+"Small forestland owner."
+],
+[
+"SSBT",
+"Stream with salmon, steelhead or bull trout. The most protective requirements."
+],
+[
+"Squash pipe",
+"A pipe whose span and rise differ, so it does not match a round diameter."
+],
+[
+"Substrate in pipe",
+"Streambed material inside the culvert. Yes, partial or no."
+],
+[
+"Type D",
+"Stream with domestic water use."
+],
+[
+"Type F",
+"Fish-bearing stream."
+],
+[
+"Type N",
+"Non-fish-bearing stream."
+],
+[
+"Undetermined",
+"A reportable culvert status for a crossing that could not be assessed. Keeps it on the work matrix."
+],
+[
+"Vacated road",
+"Crossings and fills removed, channel re-established, road barricaded, and notified to the State Forester."
+],
+[
+"Waterbar",
+"A cross ditch or berm turning water off the running surface."
+]
+]
+},
+{
+"t": "h1",
+"x": "Appendix A. Road classification in the field"
+},
+{
+"t": "p",
+"x": "The four classes decided from what the road is doing now, plus the four-part vacated test. See Section 6.1."
+},
+{
+"t": "img",
+"src": "image3.png"
+},
+{
+"t": "img",
+"src": "image4.png"
+},
+{
+"t": "h1",
+"x": "Appendix B. Cross drain or stream culvert?"
+},
+{
+"t": "p",
+"x": "Look for a channel on the ground rather than relying on the stream layer, and what to do with a pirated stream. See Sections 4 and 4.1."
+},
+{
+"t": "img",
+"src": "image5.png"
+},
+{
+"t": "img",
+"src": "image6.png"
+},
+{
+"t": "h1",
+"x": "Appendix C. Percent open and degree of embedment"
+},
+{
+"t": "p",
+"x": "The five percent open bands, and the same sediment line read as a depth for embedment. See Sections 4 and 4.1."
+},
+{
+"t": "img",
+"src": "image7.png"
+},
+{
+"t": "img",
+"src": "image8.png"
+},
+{
+"t": "h1",
+"x": "Appendix D. Hydrologic connectivity: connected and disconnected"
+},
+{
+"t": "p",
+"x": "Twelve cases. Any one disconnection condition is enough. See Section 4."
+},
+{
+"t": "img",
+"src": "image9.png"
+},
+{
+"t": "img",
+"src": "image10.png"
+},
+{
+"t": "img",
+"src": "image11.png"
+},
+{
+"t": "img",
+"src": "image12.png"
+},
+{
+"t": "h1",
+"x": "Appendix E. Potential inputs for plugging: the 20 ft test"
+},
+{
+"t": "p",
+"x": "What qualifies and what does not, within roughly 20 ft upstream of the inlet. See Section 4."
+},
+{
+"t": "img",
+"src": "image13.png"
+},
+{
+"t": "img",
+"src": "image14.png"
+},
+{
+"t": "h1",
+"x": "Appendix F. FPA_Class: when a road does not meet FPR"
+},
+{
+"t": "p",
+"x": "The six failing conditions, plus two cases that still meet FPR. See Section 6.3."
+},
+{
+"t": "img",
+"src": "image15.png"
+},
+{
+"t": "img",
+"src": "image16.png"
+},
+{
+"t": "img",
+"src": "image17.png"
+},
+{
+"t": "h1",
+"x": "Appendix G. Downspout"
+},
+{
+"t": "p",
+"x": "What the Downspout field is asking, and the difference between having one and needing one. See Section 4.1."
+},
+{
+"t": "img",
+"src": "image18.png"
+}
+]</script>
+<script>window.GUIDE_DATE="November 3, 2026";</script>
+<script>// Decision walkthroughs. Wording follows the FRIA Field Guide. refs = section number prefixes.
+const IMMINENT = [
+  'Actively diverting the stream or ditchline runoff.',
+  'Actively eroding the road prism or channel so as to undermine the culvert.',
+  'Completely blocked, plugged, crushed or buried.',
+  'Partially or completely failed fill.',
+  'High plugging potential with high fill at risk and high diversion potential.'
+];
+const DISCONNECT = [
+  'A cross drain, another stream culvert, or both sides of the road ditched out within 300 ft.',
+  'A natural drainage break, such as a crest, within 300 ft.',
+  'Sediment traps or settling ponds in the ditchline.',
+  'Deep fill: slope distance from the ditch to the actual stream channel is greater than 30 ft.',
+  'Dirt road: a functional waterbar within 50 ft. If there is a ditch, the waterbar must be keyed into it.',
+  'The road is undrivable and well vegetated with grass or brush.'
+];
+const FPR = [
+  'The ditch is blocked or non-functional, and it is causing road prism or fillslope erosion.',
+  'The road fill has slid out, slumped, or is cracking.',
+  'Water is running down or across the road, or rills or ruts show that it has been.',
+  'Ponded water in the road, particularly near a stream, or extensive potholing deeper than the rocked surfacing.',
+  'Significant erosion or rilling in the cutbank, ditch or fillslope.',
+  'A stream or spring is pirated down the ditchline or running across the road. Any distance counts.'
+];
+
+const TREES = {
+  status: {
+    title: 'Culvert status', blurb: 'CIRF, CMRPR, Undetermined or Unknown', start: 'xd',
+    nodes: {
+      xd: { q: 'Is it a cross drain?', help: 'A relief culvert with no stream channel at the road. Look for a channel on the ground; do not rely on the stream layer.',
+        opts: [['Yes, cross drain', 'r_na'], ['No, there is a stream channel', 'reach'], ['Not sure', '@cross']] },
+      reach: { q: 'Can you reach and see the pipe?',
+        opts: [['Yes', 'cirf'], ['No: no access, buried, or could not locate', 'r_noreach']] },
+      cirf: { q: 'Is any one of these true?', list: IMMINENT, help: 'Do not count the 50-year flow. That is an office calculation.',
+        opts: [['Yes, at least one', 'r_cirf'], ['None of these', 'fish']] },
+      fish: { q: 'Is it a fish stream (Type F or SSBT)?', help: 'Go by the stream layer: mapped fish stream is Type F. Mapped non-fish or not mapped is Type N.',
+        opts: [['Yes, fish stream', 'pass'], ['No, Type N', 'minor']] },
+      pass: { q: 'Is the pipe fish passable?', list: ['Is there an outlet drop?', 'Is the inlet width less than the active channel width?', 'Is there continuous and plentiful substrate in the pipe?'],
+        help: 'Any outlet drop, a narrow inlet, or no continuous substrate is a barrier.',
+        opts: [['Passable', 'minor'], ['Not passable', 'r_und'], ['Not 100% sure', 'minor', 'Code Fish_Passage as needs review.']] },
+      minor: { q: 'Does it have minor issues?', list: ['Partially plugged.', 'Minor or historic erosion at the outlet.'],
+        opts: [['Yes', 'r_cmrpr'], ['No, it looks good', 'r_unknown']] },
+      r_na: { tone: 'blue', code: 'NA', text: 'Cross drains are not in a stream channel. Culvert status and hydrologic connectivity do not apply. Complete material, condition, size, percent open and the rest as normal.', refs: ['4.1'] },
+      r_noreach: { tone: 'blue', code: 'Unknown', text: 'Leave the culvert status as Unknown with a comment saying why: no access, buried, could not locate. The crossing stays on the work matrix.', bullets: ['Never record a crossing as removed unless you saw that it was.', 'Undetermined is not used for this.'], refs: ['6.2'] },
+      r_cirf: { tone: 'red', code: 'CIRF', text: 'Imminent risk of failure. A CIRF pipe must be replaced within 2 years.', bullets: ['Use the comments to say which condition you saw.'], refs: ['2.'] },
+      r_und: { tone: 'amber', code: 'Undetermined', text: 'Not fish passable, but not imminent risk. Undetermined pipes must be prioritized for improvement. The FRIA guidance sets no deadline.', refs: ['2.', '4.2'] },
+      r_cmrpr: { tone: 'amber', code: 'CMRPR', text: 'Minimal risk to public resources: minor issues, but none of the imminent risk conditions.', refs: ['2.'] },
+      r_unknown: { tone: 'ok', code: 'Unknown', text: 'The pipe looks good and the only open question is the 50-year flow. Unknown is the default. The office runs the 50-year calculation and changes it to fully functioning (FFC-F or FFC-N) or Undetermined.', bullets: ['Field crews do not make an FFC call.', 'Failing the 50-year flow alone does not make a pipe CIRF.'], refs: ['2.'] }
+    }
+  },
+  fpr: {
+    title: 'Does the road meet FPR?', blurb: 'FPA_Class for a road segment', start: 'list',
+    nodes: {
+      list: { q: 'At any point on the segment, is any one of these true?', list: FPR,
+        help: 'Pipe problems, including hydrologic connection, do not count. They are tracked on the culvert.',
+        opts: [['Yes, at least one', 'r_fail'], ['None of these', 'r_pass']] },
+      r_fail: { tone: 'red', code: 'Does not meet FPR', text: 'Code the whole segment, even if the problem is on 10% of its length.', bullets: ['Drop a Road Notes point exactly where the problem is.', 'Cracking or slumping also makes Cut_Fillslope_Stability unstable.', 'Rilling, ruts or ponding make Surface_Stability unstable.'], refs: ['6.3', '6.4'] },
+      r_pass: { tone: 'ok', code: 'Meets FPR', text: 'None of the failing conditions are present.', bullets: ['A blocked ditch with no erosion does not fail the road. Record it under Ditch_Presence with a maintenance note.', 'No ditch, but outsloped and in good condition: meets FPR.', 'Potholes alone do not fail a road.'], refs: ['6.3'] }
+    }
+  },
+  cross: {
+    title: 'Cross drain or stream culvert?', blurb: 'Look for a channel, not the map', start: 'chan',
+    nodes: {
+      chan: { q: 'Is there a stream channel with bed and banks at the road?', help: 'Ignore the stream layer. Go by what is on the ground.',
+        opts: [['Yes, a channel', 'mapped'], ['No channel', 'spring']] },
+      mapped: { q: 'Is the stream on the stream layer?',
+        opts: [['Yes, mapped', 'r_culv'], ['No, not mapped', 'r_culv_new']] },
+      spring: { q: 'Is the pipe carrying a spring?', help: 'Groundwater running out of the bank with no stream channel. Standing water in the ditch does not count as a spring.',
+        opts: [['Yes, a spring', 'r_spring'], ['No', 'map2']] },
+      map2: { q: 'Does the map show a stream here?',
+        opts: [['Yes', 'r_xd_nochan'], ['No', 'r_xd']] },
+      r_culv: { tone: 'ok', code: 'Stream culvert', text: 'Code it round, squash or box as appropriate. Stream class from the layer: mapped fish stream is Type F, mapped non-fish stream is Type N.', refs: ['4.', '4.1', '3.'] },
+      r_culv_new: { tone: 'ok', code: 'Stream culvert', text: 'Code it round, squash or box as appropriate. A stream that is not mapped is Type N. No comment needed.', refs: ['4.', '3.'] },
+      r_spring: { tone: 'blue', code: 'Cross drain', text: 'Enter it as a cross drain and note in the comments that it carries a spring.', refs: ['4.'] },
+      r_xd_nochan: { tone: 'blue', code: 'Cross drain', text: 'Mapped stream, but no channel at the road. Call it a cross drain and note in the comments that there is no stream channel.', refs: ['4.'] },
+      r_xd: { tone: 'blue', code: 'Cross drain', text: 'A relief culvert. Stream fields, culvert status and hydrologic connectivity do not apply.', bullets: ['Water bars are not cross drains.'], refs: ['4.', '4.1'] }
+    }
+  },
+  hydro: {
+    title: 'Connected or disconnected?', blurb: 'Hydrologic connectivity on a stream pipe', start: 'xd',
+    nodes: {
+      xd: { q: 'Is it a cross drain?', opts: [['Yes', 'r_na'], ['No, stream culvert', 'scour']] },
+      scour: { q: 'Is there visible scour from the ditchline to the stream?', help: 'No matter the distance.',
+        opts: [['Yes', 'r_conn'], ['No', 'sag']] },
+      sag: { q: 'Is the pipe in a sag?', help: 'The road drains to the pipe from both sides.',
+        opts: [['Yes, a sag', 'side1'], ['No, one uphill side', 'one']] },
+      one: { q: 'On the uphill side of the pipe, is any one of these true?', list: DISCONNECT,
+        opts: [['Yes, at least one', 'r_disc'], ['None of these', 'r_conn']] },
+      side1: { q: 'First side of the sag: is any one of these true?', list: DISCONNECT,
+        opts: [['Yes, at least one', 'side2'], ['None of these', 'r_conn_sag']] },
+      side2: { q: 'Other side of the sag: is any one of these true?', list: DISCONNECT,
+        opts: [['Yes, at least one', 'r_disc'], ['None of these', 'r_conn_sag']] },
+      r_na: { tone: 'blue', code: 'NA', text: 'Hydrologic connectivity does not apply to cross drains.', refs: ['4.1'] },
+      r_conn: { tone: 'red', code: 'Connected', text: 'The road prism routes water to the stream at this crossing.', refs: ['4.'] },
+      r_conn_sag: { tone: 'red', code: 'Connected', text: 'In a sag, both sides must be disconnected. One side disconnected and the other not means the pipe is connected.', refs: ['4.'] },
+      r_disc: { tone: 'ok', code: 'Disconnected', text: 'Any one disconnection condition is enough on each uphill side.', refs: ['4.'] }
+    }
+  }
+};
+
+(function(){
+'use strict';
+const BLOCKS = JSON.parse(document.getElementById('guide-data').textContent);
+const $ = (s, el) => (el || document).querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const md = s => esc(s).replace(/\*\*([^*]+?)\*\*/g, '<strong>$1</strong>');
+const plain = s => String(s).replace(/\*\*/g, '');
+
+/* ---------- sections ---------- */
+const SECS = []; let cur = null, parent = null;
+BLOCKS.forEach(b => {
+  if (b.t === 'h1' || b.t === 'h2') {
+    cur = { id: 's' + SECS.length, title: b.x, lvl: b.t === 'h1' ? 1 : 2, blocks: [] };
+    if (b.t === 'h1') parent = cur; cur.parent = b.t === 'h2' ? parent : null;
+    SECS.push(cur);
+  } else if (cur) cur.blocks.push(b);
+});
+const secByPrefix = p => SECS.find(s => s.title.startsWith(p + (p.endsWith('.') ? ' ' : ' ')) || s.title.startsWith(p));
+
+/* ---------- render blocks ---------- */
+function renderBlocks(blocks, hl) {
+  let h = '', list = null;
+  const H = s => hl ? highlight(s, hl) : md(s);
+  const flush = () => { if (list) { h += `<${list.tag}>${list.items.join('')}</${list.tag}>`; list = null; } };
+  blocks.forEach(b => {
+    if (b.t === 'li') {
+      const tag = b.num ? 'ol' : 'ul';
+      if (!list || list.tag !== tag) { flush(); list = { tag, items: [] }; }
+      list.items.push(`<li>${H(b.x)}</li>`); return;
+    }
+    flush();
+    if (b.t === 'p') h += `<p>${H(b.x)}</p>`;
+    else if (b.t === 'std') h += `<div class="std"><span class="lab">MANULIFE STANDARD</span>${H(b.x)}</div>`;
+    else if (b.t === 'cite') h += `<p class="cite">${esc(b.x)}</p>`;
+    else if (b.t === 'img') h += `<button class="fig" data-zoom="img/${esc(b.src)}" aria-label="Open figure full size"><img src="img/${esc(b.src)}" alt="Guide figure" loading="lazy"></button>`;
+    else if (b.t === 'table') h += tableHTML(b.rows, hl);
+    else if (b.t === 'gloss') h += `<div class="gloss">${b.rows.map(r => `<div><strong>${H(r[0])}</strong> ${H(r[1])}</div>`).join('')}</div>`;
+  });
+  flush();
+  return h;
+}
+function tableHTML(rows, hl) {
+  const H = s => hl ? highlight(s, hl) : md(s);
+  return `<div class="tbl${rows[0].length > 3 && rows.length > 2 && rows[0].length * 140 > 520 ? '' : ''}${rows[0].length >= 3 && rows.length > 3 && rows.some(r => r.join('').length > 260) ? ' wide' : ''}"><table><thead><tr>${rows[0].map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(r => `<tr>${r.map(c => `<td>${H(c)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+
+/* ---------- search ---------- */
+const STOP = new Set('a an and are as at be by do does for from has have how i if in is it its me my of on or should so that the their them then there these they this to was we what when where which who why will with you your do did get go need'.split(' '));
+const PHRASES = [
+  [/\bcross[\s-]?drains?\b/g, 'crossdrain'], [/\bwater[\s-]?bars?\b/g, 'waterbar'], [/\bactive channel width\b/g, 'acw'],
+  [/\b(50|fifty)[\s-]?(year|yr)\b/g, 'fiftyyear'], [/\bq50\b/g, 'fiftyyear'], [/\boutlet drop\b/g, 'outletdrop'],
+  [/\bburied depth\b/g, 'embedment'], [/\bnon[\s-]?fish\b/g, 'nonfish'], [/\btype n\b/g, 'nonfish'], [/\btype np\b/g, 'nonfish'],
+  [/\btype f\b/g, 'fish'], [/\blimited inventory\b/g, 'limitedinventory'], [/\broad notes?\b/g, 'roadnote'],
+  [/\b(can'?t|cannot|can not|couldn'?t|could not|unable to)\b/g, 'cant'], [/\bfield maps\b/g, 'fieldmaps'],
+  [/\bhydrologic(ally)? (connectivity|connected|disconnected|disconnection)\b/g, 'connectivity'],
+  [/\bfill height\b/g, 'fillheight'], [/\bpercent open\b/g, 'percentopen'], [/\bstream class(ification)?\b/g, 'streamclass'],
+  [/\bculvert status\b/g, 'status'], [/\bditch[\s-]?line\b/g, 'ditch'], [/\bfpa[_ ]class\b/g, 'fpr'], [/\bfpa\b/g, 'fpr']
+];
+const GROUPS = [
+  ['culvert','pipe','cmp','cpp','tube','crossing','squash','arch','structure'],
+  ['crossdrain','relief','xdrain'],
+  ['waterbar','dip'],
+  ['blowout','washout','wash','blown','fail','failure','slid','slide','slump'],
+  ['plug','plugged','block','blocked','clog','clogged','buried','crushed','debri','sediment'],
+  ['perched','hang','hanging','outletdrop','drop'],
+  ['fish','ssbt','salmon','steelhead','trout','fishbear'],
+  ['nonfish','np','ns'],
+  ['acw','bankfull','width'],
+  ['embedment','embed','embedded'],
+  ['substrate','gravel','cobble','bed','bedload'],
+  ['pirat','pirate','pirated','pirating','captur','captured','divert','diverting','diversion'],
+  ['rut','rill','rilling'],
+  ['pothole','puddle','pond','ponded','ponding'],
+  ['crack','cracking','slump','fillslope','cutslope','cutbank'],
+  ['undrivable','undriveable','brush','brushed','coyot','coyoted','impassable','overgrown','abandon','abandoned'],
+  ['cant','reach','access','locate','find','unreachable'],
+  ['limitedinventory','blm','neighbor','neighbour','nonowned'],
+  ['duplicate','double','dup'],
+  ['photo','picture','pic','camera'],
+  ['fiftyyear','peak','flow'],
+  ['status','cirf','cmrpr','ffc','undetermined','unknown','imminent','minimal'],
+  ['downspout','flume','extension'],
+  ['spring','seep','groundwater'],
+  ['outslope','outsloped','inslope'],
+  ['puncheon','removed','other'],
+  ['connectivity','connected','disconnected','disconnect','connect'],
+  ['poor','rust','rusted','corrod','corroded','hole','holes','condition'],
+  ['vacat','vacated','decommission','decommissioned'],
+  ['road','segment','mainline','spur'],
+  ['fillheight','fill','deep'],
+  ['fpr','meet','meets','fail','fails'],
+  ['intermittent','partial'],
+  ['required','require','mandatory'],
+  ['default','prefill','prefilled','pre'],
+  ['map','layer','mapped','gis'],
+  ['add','adding','new','missing','create']
+];
+function stem(w) {
+  if (w.length > 5 && w.endsWith('ing')) return w.slice(0, -3);
+  if (w.length > 4 && w.endsWith('ies')) return w.slice(0, -3) + 'y';
+  if (w.length > 4 && w.endsWith('es') && !w.endsWith('ses')) return w.slice(0, -2);
+  if (w.length > 3 && w.endsWith('s') && !w.endsWith('ss')) return w.slice(0, -1);
+  if (w.length > 5 && w.endsWith('ed')) return w.slice(0, -2);
+  return w;
+}
+function norm(text) {
+  let t = ' ' + plain(text).toLowerCase().replace(/[’']/g, "'") + ' ';
+  PHRASES.forEach(([re, rep]) => { t = t.replace(re, ' ' + rep + ' '); });
+  return t.replace(/[^a-z0-9%' ]+/g, ' ').replace(/'/g, '').split(/\s+/).filter(w => w && !STOP.has(w)).map(stem);
+}
+const GMAP = {};
+GROUPS.forEach(g => { const gs = g.map(stem); gs.forEach(w => { (GMAP[w] = GMAP[w] || new Set()); gs.forEach(x => x !== w && GMAP[w].add(x)); }); });
+
+// chunks: one per paragraph / callout / list (with its lead-in) / table row / glossary term
+const CHUNKS = [];
+SECS.forEach(sec => {
+  const bl = sec.blocks;
+  for (let i = 0; i < bl.length; i++) {
+    const b = bl[i];
+    if (b.t === 'img' || b.t === 'cite') continue;
+    if (b.t === 'li') {
+      const items = [b]; while (bl[i + 1] && bl[i + 1].t === 'li') items.push(bl[++i]);
+      const prev = CHUNKS[CHUNKS.length - 1];
+      if (prev && prev.sec === sec && /:\s*$/.test(plain(prev.blocks[prev.blocks.length - 1].x || ''))) { prev.blocks.push(...items); prev.text += ' ' + items.map(x => x.x).join(' '); }
+      else CHUNKS.push({ sec, kind: 'list', blocks: items, text: items.map(x => x.x).join(' ') });
+      continue;
+    }
+    if (b.t === 'table') {
+      const head = b.rows[0];
+      b.rows.slice(1).forEach(r => CHUNKS.push({ sec, kind: 'row', blocks: [{ t: 'table', rows: [head, r] }], text: r.join(' ') + ' ' + head.join(' ') }));
+      continue;
+    }
+    if (b.t === 'gloss') { b.rows.forEach(r => CHUNKS.push({ sec, kind: 'def', blocks: [{ t: 'p', x: `**${r[0]}**: ${r[1]}` }], text: r[0] + ' ' + r[0] + ' ' + r[1] })); continue; }
+    const c = { sec, kind: b.t === 'std' ? 'std' : 'p', blocks: [b], text: b.x };
+    const nx = bl[i + 1]; if (nx && nx.t === 'cite') c.blocks.push(nx);
+    CHUNKS.push(c);
+  }
+});
+CHUNKS.forEach(c => {
+  c.toks = norm(c.text); c.len = c.toks.length;
+  c.tf = {}; c.toks.forEach(t => c.tf[t] = (c.tf[t] || 0) + 1);
+  c.title = new Set(norm(c.sec.title + ' ' + (c.sec.parent ? c.sec.parent.title : '')));
+  c.low = plain(c.text).toLowerCase();
+});
+const N = CHUNKS.length, AVG = CHUNKS.reduce((a, c) => a + c.len, 0) / N, DF = {};
+CHUNKS.forEach(c => Object.keys(c.tf).forEach(t => DF[t] = (DF[t] || 0) + 1));
+const idf = t => Math.log(1 + (N - (DF[t] || 0) + 0.5) / ((DF[t] || 0) + 0.5));
+
+function search(q) {
+  const qt = [...new Set(norm(q))];
+  if (!qt.length) return { hits: [], terms: [] };
+  const terms = qt.map(t => ({ t, alts: [...(GMAP[t] || [])] }));
+  const scored = CHUNKS.map(c => {
+    let s = 0, matched = 0;
+    terms.forEach(({ t, alts }) => {
+      let best = 0;
+      const one = (w, wt) => { const f = c.tf[w]; if (!f) return 0; return wt * idf(w) * (f * 2.2) / (f + 1.2 * (0.25 + 0.75 * c.len / AVG)); };
+      best = one(t, 1);
+      alts.forEach(a => { best = Math.max(best, one(a, 0.6)); });
+      if (c.title.has(t)) best += 0.8 * idf(t); else if (alts.some(a => c.title.has(a))) best += 0.4 * idf(t);
+      if (best > 0) matched++;
+      s += best;
+    });
+    if (!s) return null;
+    s *= 0.6 + 0.4 * (matched / terms.length) * (matched / terms.length) + (matched === terms.length && terms.length > 1 ? 0.3 : 0);
+    const raw = q.toLowerCase().trim();
+    if (raw.split(/\s+/).length > 1 && c.low.includes(raw)) s *= 1.5;
+    if (c.kind === 'std') s *= 1.15;
+    return { c, s };
+  }).filter(Boolean).sort((a, b) => b.s - a.s);
+  const hl = new Set(); terms.forEach(({ t, alts }) => { hl.add(t); alts.forEach(a => hl.add(a)); });
+  return { hits: scored, terms: [...hl] };
+}
+function highlight(s, terms) {
+  const out = md(s);
+  if (!terms || !terms.length) return out;
+  // highlight whole words whose stem matches a search term
+  return out.replace(/(<[^>]+>)|([A-Za-z0-9%][A-Za-z0-9%'’-]*)/g, (m, tag, w) => {
+    if (tag) return tag;
+    const n = norm(w); return n.length && n.some(x => terms.includes(x)) ? `<mark>${w}</mark>` : w;
+  });
+}
+
+/* ---------- views ---------- */
+const view = $('#view');
+const tabs = [...document.querySelectorAll('nav.tabs button')];
+let lastQuery = '';
+function setTab(name) { tabs.forEach(b => b.setAttribute('aria-current', b.dataset.tab === name ? 'page' : 'false')); }
+const QUICK = ['Can\'t reach the pipe', 'Which fields for a cross drain', 'Blocked ditch', 'Active channel width', 'Water bar', 'Add a new road', 'Limited Inventory', 'Duplicate points', 'Percent open', 'Pipe has holes in it', 'Pirated spring', 'Deep fill'];
+
+function showAsk(q) {
+  setTab('ask');
+  q = (q || '').trim();
+  const input = $('#q'); if (q && input.value !== q) input.value = q;
+  if (!q) {
+    view.innerHTML = `
+      <section class="sec"><p class="eyebrow">Ask the guide</p>
+      <h1>Type a question or a few words</h1>
+      <p class="muted small">Answers come straight from the FRIA Field Guide, word for word. Try the quick questions below, or a walkthrough for the calls people get wrong.</p></section>
+      <div class="chips">${QUICK.map(x => `<button class="chip" data-ask="${esc(x)}">${esc(x)}</button>`).join('')}</div>
+      <section class="sec"><p class="eyebrow">Walkthroughs</p><div class="cards">${walkCards()}</div></section>
+      ${foot()}`;
+    return;
+  }
+  lastQuery = q;
+  const { hits, terms } = search(q);
+  const top = hits.slice(0, 8);
+  const good = top.length && top[0].s > 1.2;
+  let h = `<section class="sec"><p class="eyebrow">Results for</p><h1>${esc(q)}</h1></section>`;
+  const sugg = suggestWalk(q);
+  if (sugg) h += `<button class="card" data-walk="${sugg}"><b>Walk through it: ${esc(TREES[sugg].title)}</b><span>Answer a few questions and get the call.</span></button>`;
+  if (!good) h += `<div class="empty"><b>No strong match.</b><p class="small muted">Search matches words, so try different ones (pipe, ditch, fill, status) or open the guide and browse.</p></div>`;
+  h += top.map(({ c }) => `
+    <article class="result">
+      <div class="where">${c.kind === 'def' ? '<span class="tag def">Glossary</span>' : ''}
+        <span>${esc(c.sec.title)}</span><button data-sec="${c.sec.id}">Open section</button></div>
+      ${renderBlocks(c.blocks, terms)}
+    </article>`).join('');
+  h += foot();
+  view.innerHTML = h;
+}
+function suggestWalk(q) {
+  const t = new Set(norm(q));
+  const has = (...w) => w.some(x => t.has(stem(x)));
+  if (has('cirf','cmrpr','status','undetermined','unknown','imminent','ffc')) return 'status';
+  if (has('connectivity','connected','disconnected','sag','scour')) return 'hydro';
+  if (has('fpr','meet','fail')) return 'fpr';
+  if (has('crossdrain','relief','spring')) return 'cross';
+  return null;
+}
+function walkCards() { return Object.entries(TREES).map(([k, t]) => `<button class="card" data-walk="${k}"><b>${esc(t.title)}</b><span>${esc(t.blurb)}</span></button>`).join(''); }
+function foot() { return `<footer class="note">Tarn Forestry LLC · FRIA Field Guide, ${esc(window.GUIDE_DATE || '')}. The guide governs. If this app and the guide ever differ, go by the printed guide and tell Tarn.</footer>`; }
+
+let walk = null;
+function showWalks() {
+  setTab('walk');
+  view.innerHTML = `<section class="sec"><p class="eyebrow">Walkthroughs</p><h1>Make the call step by step</h1>
+    <p class="muted small">One question at a time. Each answer links back to the guide section it comes from.</p></section>
+    <div class="cards">${walkCards()}</div>${foot()}`;
+}
+function startWalk(key) { walk = { key, node: TREES[key].start, trail: [], notes: [] }; renderWalk(); }
+function renderWalk() {
+  setTab('walk');
+  const tree = TREES[walk.key], n = tree.nodes[walk.node];
+  let h = `<div class="wk"><div class="row"><button class="back" data-walks>All walkthroughs</button>${walk.trail.length ? '<button class="back" data-wback>Back one step</button>' : ''}</div>
+    <p class="eyebrow">${esc(tree.title)}</p>`;
+  if (walk.trail.length) h += `<div class="trail">${walk.trail.map(s => `<span>${esc(s.a)}</span>`).join('')}</div>`;
+  if (n.q) {
+    h += `<div class="q"><h2>${esc(n.q)}</h2>${n.list ? `<ul>${n.list.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}${n.help ? `<p class="small muted">${esc(n.help)}</p>` : ''}
+      <div class="opts">${n.opts.map((o, i) => `<button class="opt" data-opt="${i}">${esc(o[0])}</button>`).join('')}</div></div>`;
+  } else {
+    const notes = walk.notes.concat(n.bullets || []);
+    h += `<div class="answer ${n.tone}"><div class="code">${esc(n.code)}</div><p>${esc(n.text)}</p>${notes.length ? `<ul>${notes.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}</div>
+      <div class="row">${(n.refs || []).map(r => { const s = secByPrefix(r); return s ? `<button class="back" data-sec="${s.id}">Guide: ${esc(s.title)}</button>` : ''; }).join('')}
+      <button class="back" data-walk="${walk.key}">Start over</button></div>`;
+  }
+  h += '</div>';
+  view.innerHTML = h; window.scrollTo(0, 0);
+}
+function pickOpt(i) {
+  const n = TREES[walk.key].nodes[walk.node], o = n.opts[i];
+  if (o[1].startsWith('@')) { startWalk(o[1].slice(1)); return; }
+  walk.trail.push({ node: walk.node, a: o[0], note: o[2] });
+  if (o[2]) walk.notes.push(o[2]);
+  walk.node = o[1]; renderWalk();
+}
+function walkBack() {
+  const s = walk.trail.pop(); if (!s) return;
+  if (s.note) walk.notes.pop();
+  walk.node = s.node; renderWalk();
+}
+
+function showCard() {
+  setTab('card');
+  const t41 = (SECS.find(s => s.title.startsWith('4.1')) || { blocks: [] }).blocks.find(b => b.t === 'table');
+  const req = CHUNKS.filter(c => /Culvert status in the field|Stream class at the crossing|Fish streams only|Embedment measurement|Pre-filled attributes|Limited Inventory|Leave as defaulted/.test(c.text));
+  view.innerHTML = `<section class="sec"><p class="eyebrow">Field card</p><h1>What to fill in at a crossing</h1></section>
+    ${t41 ? tableHTML(t41.rows) : ''}
+    <section class="sec"><h2>Quick rules</h2>${req.map(c => renderBlocks(c.blocks)).join('')}</section>${foot()}`;
+}
+
+function showGuide() {
+  setTab('guide');
+  view.innerHTML = `<section class="sec"><p class="eyebrow">The guide</p><h1>FRIA Field Guide</h1></section>
+    <div class="toc">${SECS.map(s => `<button class="${s.lvl === 2 ? 'sub' : ''}" data-sec="${s.id}"><span>${esc(s.title)}</span></button>`).join('')}</div>${foot()}`;
+}
+function showSec(id) {
+  setTab('guide');
+  const i = SECS.findIndex(s => s.id === id); const s = SECS[i]; if (!s) return showGuide();
+  const subs = s.lvl === 1 ? SECS.filter(x => x.parent === s) : [];
+  const prev = SECS[i - 1], next = SECS[i + 1];
+  view.innerHTML = `<div class="row">${lastQuery ? `<button class="back" data-ask="${esc(lastQuery)}">Back to results</button>` : ''}<button class="back" data-guide>Contents</button></div>
+    <section class="sec">${s.parent ? `<p class="eyebrow">${esc(s.parent.title)}</p>` : ''}<h1>${esc(s.title)}</h1>${renderBlocks(s.blocks)}</section>
+    ${subs.length ? `<div class="toc">${subs.map(x => `<button class="sub" data-sec="${x.id}"><span>${esc(x.title)}</span></button>`).join('')}</div>` : ''}
+    <div class="row">${prev ? `<button class="back" data-sec="${prev.id}">Previous: ${esc(prev.title)}</button>` : ''}${next ? `<button class="back" data-sec="${next.id}">Next: ${esc(next.title)}</button>` : ''}</div>${foot()}`;
+  window.scrollTo(0, 0);
+}
+
+/* ---------- routing ---------- */
+function route() {
+  const h = (location.hash || '').slice(1);
+  if (h.startsWith('walk-') && TREES[h.slice(5)]) startWalk(h.slice(5));
+  else if (h === 'walk') showWalks();
+  else if (h === 'card') showCard();
+  else if (h === 'guide') showGuide();
+  else if (/^s\d+$/.test(h)) showSec(h);
+  else showAsk(lastQuery);
+}
+function go(hash) { if (location.hash === '#' + hash) route(); else location.hash = hash; }
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.tab) { const m = { ask: '', walk: 'walk', card: 'card', guide: 'guide' }[b.dataset.tab]; if (b.dataset.tab === 'ask') { lastQuery = ''; $('#q').value = ''; } go(m || 'ask'); return; }
+  if (b.dataset.ask !== undefined) { $('#q').value = b.dataset.ask; showAsk(b.dataset.ask); window.scrollTo(0, 0); return; }
+  if (b.dataset.walk) { go('walk-' + b.dataset.walk); if (location.hash === '#walk-' + b.dataset.walk) startWalk(b.dataset.walk); return; }
+  if (b.dataset.walks !== undefined) { go('walk'); return; }
+  if (b.dataset.wback !== undefined) { walkBack(); return; }
+  if (b.dataset.opt !== undefined) { pickOpt(+b.dataset.opt); return; }
+  if (b.dataset.sec) { go(b.dataset.sec); return; }
+  if (b.dataset.guide !== undefined) { go('guide'); return; }
+  if (b.dataset.zoom) { openZoom(b.dataset.zoom); return; }
+});
+$('#search').addEventListener('submit', e => { e.preventDefault(); const q = $('#q').value; $('#q').blur(); if (location.hash && location.hash !== '#ask') { history.replaceState(null, '', location.pathname + location.search); } showAsk(q); window.scrollTo(0, 0); });
+window.addEventListener('hashchange', route);
+
+function openZoom(src) {
+  const z = document.createElement('div'); z.className = 'zoom';
+  z.innerHTML = `<div class="bar"><button data-zbig>Zoom</button><button data-zclose>Close</button></div><img src="${esc(src)}" alt="Guide figure, full size">`;
+  z.addEventListener('click', ev => { const t = ev.target.closest('button'); if (!t) return; ev.stopPropagation(); if (t.dataset.zclose !== undefined) z.remove(); else { z.classList.toggle('big'); t.textContent = z.classList.contains('big') ? 'Fit' : 'Zoom'; } });
+  document.body.appendChild(z);
+}
+
+/* ---------- offline status ---------- */
+const st = $('#status');
+function setStatus() { if (!st) return; st.textContent = navigator.onLine ? (window.OFFLINE_READY ? 'Saved for offline' : 'Online') : 'Offline'; }
+window.addEventListener('online', setStatus); window.addEventListener('offline', setStatus);
+window.setOfflineReady = () => { window.OFFLINE_READY = true; setStatus(); };
+setStatus();
+route();
+})();
+</script><script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').then(r=>{navigator.serviceWorker.ready.then(()=>window.setOfflineReady&&window.setOfflineReady());}).catch(()=>{});}</script></body></html>
